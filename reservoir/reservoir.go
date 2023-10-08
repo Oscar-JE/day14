@@ -7,11 +7,14 @@ import (
 
 type Reservoir struct {
 	offset common.Point
-	m      matrix.Matrix
+	matrix matrix.Matrix
 }
 
 func InitFromIntervalls(intervals []common.ClosedInterval) Reservoir {
 	maxRow, minCol, maxCol := findMaxAndMin(intervals)
+	offset := common.InitPoint(0, minCol)
+	m := matrix.Init(maxRow, maxCol-minCol)
+	return Reservoir{offset: offset, matrix: m}
 }
 
 func findMaxAndMin(intervals []common.ClosedInterval) (int, int, int) {
