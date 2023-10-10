@@ -1,5 +1,7 @@
 package matrix
 
+import "fmt"
+
 type Matrix struct {
 	array [][]string
 }
@@ -22,4 +24,12 @@ func (m *Matrix) Set(row int, col int, r string) {
 
 func (m *Matrix) Get(row int, col int) string {
 	return m.array[row][col]
+}
+
+func (m Matrix) String() string {
+	retString := ""
+	for index := range m.array {
+		retString += fmt.Sprintln(m.array[index])
+	}
+	return retString
 }
