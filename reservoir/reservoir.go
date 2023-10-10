@@ -3,6 +3,7 @@ package reservoir
 import (
 	"day14/common"
 	"day14/reservoir/matrix"
+	"fmt"
 )
 
 type Reservoir struct {
@@ -41,4 +42,8 @@ func Min(a int, b int) int {
 		return a
 	}
 	return b
+}
+
+func (r Reservoir) String() string {
+	return fmt.Sprint(r.matrix)
 }
