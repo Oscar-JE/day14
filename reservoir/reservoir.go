@@ -14,18 +14,18 @@ type Reservoir struct {
 func InitFromIntervalls(intervals []common.ClosedInterval) Reservoir {
 	maxRow, minCol, maxCol := findMaxAndMin(intervals)
 	offset := common.InitPoint(0, minCol)
-	m := matrix.Init(maxRow, maxCol-minCol)
+	m := matrix.Init(maxRow, maxCol-minCol+1)
 	return Reservoir{offset: offset, matrix: m}
 }
 
 func findMaxAndMin(intervals []common.ClosedInterval) (int, int, int) {
-	maxRow := intervals[0].MaxRow()
-	minCol := intervals[0].MinCol()
-	maxCol := intervals[0].MaxCol()
+	maxRow := intervals[0].MaxCol()
+	minCol := intervals[0].MinRow()
+	maxCol := intervals[0].MaxRow()
 	for i := 1; i < len(intervals); i++ {
-		maxRow = Max(maxRow, intervals[i].MaxRow())
-		minCol = Min(minCol, intervals[i].MinCol())
-		maxCol = Max(maxCol, intervals[i].MaxCol())
+		maxRow = Max(maxRow, intervals[i].MaxCol())
+		minCol = Min(minCol, intervals[i].MinRow())
+		maxCol = Max(maxCol, intervals[i].MaxRow())
 	}
 	return maxRow, minCol, maxCol
 }

@@ -57,6 +57,10 @@ func (c ClosedInterval) layingIn(p Point) bool {
 	return c.start.ToTheLeftOf(p) && c.end.ToTheRightOf(p)
 }
 
+func (c ClosedInterval) MinRow() int {
+	return c.start.row
+}
+
 func (c ClosedInterval) MaxRow() int {
 	return c.end.row
 }
