@@ -13,24 +13,24 @@ type Reservoir struct {
 
 func InitFromIntervalls(intervals []common.ClosedInterval) Reservoir {
 	maxRow, minCol, maxCol := findMaxAndMin(intervals)
-	offset := common.InitPoint(0, minCol)
-	m := matrix.Init(maxRow, maxCol-minCol+1)
+	offset := common.InitPoint(minCol, 0)
+	m := matrix.Init(maxRow+1, maxCol-minCol+1)
 	reservoir := Reservoir{offset: offset, matrix: m}
-
 	for intervalIndex := range intervals {
 		wallPoints := intervals[intervalIndex].ContainedPoints()
 		for wallindex := range wallPoints {
-			point := wallPoints[wallindex]
-			reservoir.SetValue(point.GetRow(), point.GetCol(), "#")
+			point := wallPoints[wallindex] // här är det lite konstigt
+			reservoir.SetWall(point)
 		}
 	}
 
 	return reservoir
 }
 
-func (r *Reservoir) SetValue(x int, y int, value string) {
-
-	r.matrix.Set(y, x-of, value)
+func (r *Reservoir) SetWall(point common.Point) {
+	point = point.Subtract(r.offset)
+	point = point.Transpose()
+	r.matrix.SetWall(point.GetRow(), point.GetCol())
 }
 
 func findMaxAndMin(intervals []common.ClosedInterval) (int, int, int) {
@@ -61,4 +61,8 @@ func Min(a int, b int) int {
 
 func (r Reservoir) String() string {
 	return fmt.Sprint(r.matrix)
+}
+
+func (r Reservoir) ValidPoint(point common.Point) bool {
+	return false
 }

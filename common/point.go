@@ -50,3 +50,7 @@ func (p Point) GetRow() int {
 func (p Point) GetCol() int {
 	return p.col
 }
+
+func (p Point) Transpose() Point {
+	return Point{p.col, p.row}
+}
