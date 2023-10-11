@@ -63,6 +63,12 @@ func (r Reservoir) String() string {
 	return fmt.Sprint(r.matrix)
 }
 
-func (r Reservoir) ValidPoint(point common.Point) bool {
-	return false
+func (r Reservoir) OnField(point common.Point) bool {
+	internalPoint := point.Subtract(r.offset).Transpose()
+	return r.matrix.InMatrix(internalPoint.GetRow(), internalPoint.GetCol())
+}
+
+func (r Reservoir) IsBlocked(point common.Point) bool {
+	internalPoint := point.Subtract(r.offset).Transpose()
+	return r.matrix.IsBlocked(internalPoint.GetRow(), internalPoint.GetCol())
 }

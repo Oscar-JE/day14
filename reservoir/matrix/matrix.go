@@ -47,3 +47,7 @@ func (m Matrix) InMatrix(row int, col int) bool {
 	inCol := 0 <= col && col < len(m.array[0])
 	return inRow && inCol
 }
+
+func (m Matrix) IsBlocked(row int, col int) bool {
+	return m.array[row][col] != "."
+}
