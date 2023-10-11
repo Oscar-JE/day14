@@ -42,3 +42,11 @@ func (p Point) ToTheLeftOf(other Point) bool {
 func (p Point) ToTheRightOf(other Point) bool {
 	return p.row == other.row && p.col >= other.col
 }
+
+func (p Point) GetRow() int {
+	return p.row
+}
+
+func (p Point) GetCol() int {
+	return p.col
+}

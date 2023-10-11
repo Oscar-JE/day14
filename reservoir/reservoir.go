@@ -15,7 +15,22 @@ func InitFromIntervalls(intervals []common.ClosedInterval) Reservoir {
 	maxRow, minCol, maxCol := findMaxAndMin(intervals)
 	offset := common.InitPoint(0, minCol)
 	m := matrix.Init(maxRow, maxCol-minCol+1)
-	return Reservoir{offset: offset, matrix: m}
+	reservoir := Reservoir{offset: offset, matrix: m}
+
+	for intervalIndex := range intervals {
+		wallPoints := intervals[intervalIndex].ContainedPoints()
+		for wallindex := range wallPoints {
+			point := wallPoints[wallindex]
+			reservoir.SetValue(point.GetRow(), point.GetCol(), "#")
+		}
+	}
+
+	return reservoir
+}
+
+func (r *Reservoir) SetValue(x int, y int, value string) {
+
+	r.matrix.Set(y, x-of, value)
 }
 
 func findMaxAndMin(intervals []common.ClosedInterval) (int, int, int) {
