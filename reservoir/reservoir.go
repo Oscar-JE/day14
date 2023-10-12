@@ -7,19 +7,20 @@ import (
 )
 
 type Reservoir struct {
-	offset common.Point
-	matrix matrix.Matrix
+	offset    common.Point
+	matrix    matrix.Matrix
+	sandCound int
 }
 
 func InitFromIntervalls(intervals []common.ClosedInterval) Reservoir {
 	maxRow, minCol, maxCol := findMaxAndMin(intervals)
 	offset := common.InitPoint(minCol, 0)
 	m := matrix.Init(maxRow+1, maxCol-minCol+1)
-	reservoir := Reservoir{offset: offset, matrix: m}
+	reservoir := Reservoir{offset: offset, matrix: m, sandCound: 0}
 	for intervalIndex := range intervals {
 		wallPoints := intervals[intervalIndex].ContainedPoints()
 		for wallindex := range wallPoints {
-			point := wallPoints[wallindex] // här är det lite konstigt
+			point := wallPoints[wallindex]
 			reservoir.SetWall(point)
 		}
 	}
@@ -31,6 +32,13 @@ func (r *Reservoir) SetWall(point common.Point) {
 	point = point.Subtract(r.offset)
 	point = point.Transpose()
 	r.matrix.SetWall(point.GetRow(), point.GetCol())
+}
+
+func (r *Reservoir) SetSand(point common.Point) {
+	point = point.Subtract(r.offset)
+	point = point.Transpose()
+	r.matrix.SetSand(point.GetRow(), point.GetCol())
+	r.sandCound++
 }
 
 func findMaxAndMin(intervals []common.ClosedInterval) (int, int, int) {
@@ -71,4 +79,25 @@ func (r Reservoir) OnField(point common.Point) bool {
 func (r Reservoir) IsBlocked(point common.Point) bool {
 	internalPoint := point.Subtract(r.offset).Transpose()
 	return r.matrix.IsBlocked(internalPoint.GetRow(), internalPoint.GetCol())
+}
+
+func (r Reservoir) IsAllBlocked(points []common.Point) bool {
+	allBlocked := true
+	for _, p := range points {
+		allBlocked = allBlocked && r.IsBlocked(p)
+	}
+	return allBlocked
+}
+
+func (r Reservoir) FirstNoneBlocked(points []common.Point) common.Point {
+	for _, p := range points {
+		if !r.IsBlocked(p) {
+			return p
+		}
+	}
+	return points[len(points)-1]
+}
+
+func (r Reservoir) GetSandCount() int {
+	return r.sandCound
 }

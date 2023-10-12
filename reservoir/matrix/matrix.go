@@ -49,5 +49,5 @@ func (m Matrix) InMatrix(row int, col int) bool {
 }
 
 func (m Matrix) IsBlocked(row int, col int) bool {
-	return m.array[row][col] != "."
+	return m.InMatrix(row, col) && m.array[row][col] != "."
 }
