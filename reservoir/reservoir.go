@@ -78,6 +78,7 @@ func (r Reservoir) OnField(point common.Point) bool {
 
 func (r Reservoir) IsBlocked(point common.Point) bool {
 	internalPoint := point.Subtract(r.offset).Transpose()
+	if internalPoint.GetCol() < 0
 	return r.matrix.IsBlocked(internalPoint.GetRow(), internalPoint.GetCol())
 }
 

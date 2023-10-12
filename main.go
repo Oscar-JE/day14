@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	//intervals := parse.Parse("input_short.txt")
-	intervals := parse.Parse("input.txt")
+	intervals := parse.Parse("input_short.txt")
+	//intervals := parse.Parse("input.txt")
 	reservoir := reservoir.InitFromIntervalls(intervals)
 	startPosition := common.InitPoint(500, 0)
 	overfilled := false
