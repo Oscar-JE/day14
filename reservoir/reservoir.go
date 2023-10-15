@@ -28,6 +28,35 @@ func InitFromIntervalls(intervals []common.ClosedInterval) Reservoir {
 	return reservoir
 }
 
+func InitPart2(intervals []common.ClosedInterval, midpoint int) Reservoir { // nu kan vi kontrollera mot testexemplet
+	maxRow, minCol, maxCol := findMaxAndMin(intervals)
+	maxRow = maxRow + 2 // två nya rader från införandet av golvet
+	minColPyramidMax, maxColPyramidMax := upperLimitPyramidWidth(maxRow, midpoint)
+	minCol = min(minCol, minColPyramidMax)
+	maxCol = max(maxCol, maxColPyramidMax)
+	// inför lång rad i botten
+	intervals = append(intervals, common.Init(common.InitPoint(minCol, maxRow), common.InitPoint(maxCol, maxRow)))
+
+	offset := common.InitPoint(minCol, 0)
+	m := matrix.Init(maxRow+1, maxCol-minCol+1)
+	reservoir := Reservoir{offset: offset, matrix: m, sandCound: 0}
+
+	for intervalIndex := range intervals {
+		wallPoints := intervals[intervalIndex].ContainedPoints()
+		for wallindex := range wallPoints {
+			point := wallPoints[wallindex]
+			reservoir.SetWall(point)
+		}
+	}
+	return reservoir
+}
+
+func upperLimitPyramidWidth(height int, midpoint int) (int, int) {
+	lowerCol := midpoint - height
+	upperCol := midpoint + height
+	return lowerCol, upperCol
+}
+
 func (r *Reservoir) SetWall(point common.Point) {
 	point = point.Subtract(r.offset)
 	point = point.Transpose()
@@ -78,7 +107,6 @@ func (r Reservoir) OnField(point common.Point) bool {
 
 func (r Reservoir) IsBlocked(point common.Point) bool {
 	internalPoint := point.Subtract(r.offset).Transpose()
-	if internalPoint.GetCol() < 0
 	return r.matrix.IsBlocked(internalPoint.GetRow(), internalPoint.GetCol())
 }
 
@@ -101,4 +129,18 @@ func (r Reservoir) FirstNoneBlocked(points []common.Point) common.Point {
 
 func (r Reservoir) GetSandCount() int {
 	return r.sandCound
+}
+
+func max(a int, b int) int {
+	if a < b {
+		return b
+	}
+	return a
+}
+
+func min(a int, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
